@@ -265,19 +265,6 @@
       letter-spacing: -0.2px;
     }
 
-    .rate-badge {
-      display: inline-block;
-      font-size: 10px;
-      font-weight: 700;
-      padding: 2px 6px;
-      border-radius: 5px;
-      margin-left: 6px;
-      vertical-align: middle;
-    }
-
-    .rate-badge.buy { background: rgba(34, 197, 94, 0.15); color: #86EFAC; }
-    .rate-badge.sell { background: rgba(248, 113, 113, 0.15); color: #FCA5A5; }
-
     /* ============ STEP FLOW ============ */
     .step-indicator {
       display: flex;
@@ -379,7 +366,7 @@
       box-shadow: 0 6px 16px rgba(99, 102, 241, 0.2);
     }
 
-    /* ============ RESULT CARD (Revisión transparente) ============ */
+    /* ============ RESULT CARD ============ */
     .result-card {
       position: relative;
       background: linear-gradient(135deg, #4F46E5 0%, #7C3AED 55%, #A855F7 100%);
@@ -529,7 +516,7 @@
       text-align: center;
     }
 
-    /* ============ SAVED QUOTES (Historial local) ============ */
+    /* ============ HISTORY ============ */
     .history-card {
       background: var(--surface);
       backdrop-filter: blur(10px);
@@ -598,7 +585,7 @@
       font-style: italic;
     }
 
-    /* ============ RATE ALERT ============ */
+    /* ============ ALERT BOX ============ */
     .alert-box {
       background: var(--surface-solid);
       border: 1px solid var(--border);
@@ -711,7 +698,7 @@
       box-shadow: 0 10px 20px rgba(34, 197, 94, 0.4);
     }
 
-    /* ============ LOCAL INFO (SEO / Confianza) ============ */
+    /* ============ LOCAL INFO ============ */
     .local-info {
       background: var(--surface);
       backdrop-filter: blur(10px);
@@ -798,37 +785,20 @@
       <button class="refresh-btn" id="refreshBtn" onclick="loadRates()">Cargando tasas...</button>
     </header>
 
+    <!-- MODO INVERTIDO: Tasa Oficial primero -->
     <div class="modes">
-      <button class="mode-btn active" id="btnLocal" onclick="setMode('LOCAL')">🌴 Leticia Local</button>
-      <button class="mode-btn" id="btnOfficial" onclick="setMode('OFFICIAL')">🏛️ Tasa Oficial</button>
+      <button class="mode-btn active" id="btnOfficial" onclick="setMode('OFFICIAL')">🏛️ Tasa Oficial</button>
+      <button class="mode-btn" id="btnLocal" onclick="setMode('LOCAL')">🌴 Leticia Local</button>
     </div>
 
-    <!-- Tablero de Compra / Venta -->
-    <div class="board" id="localBoard">
-      <div class="board-header">
-        <div class="board-title">📊 Tablero referencial en Leticia (COP)</div>
-        <div class="board-hint">Compra / Venta por 1 unidad</div>
-      </div>
-      <table>
-        <thead>
-          <tr>
-            <th>Moneda</th>
-            <th class="num">Compra</th>
-            <th class="num">Venta</th>
-          </tr>
-        </thead>
-        <tbody id="boardBody"></tbody>
-      </table>
-    </div>
-
-    <!-- Flujo: Origen → Destino -->
     <div class="step-indicator">
       <span class="step-num active">1</span> Origen
       <span class="step-line"></span>
       <span class="step-num active">2</span> Destino
     </div>
 
-    <div class="field" id="customRateBox">
+    <!-- Tasa manual oculta por defecto (porque inicia en Oficial) -->
+    <div class="field" id="customRateBox" style="display: none;">
       <label for="customRate" id="customRateLabel">Tasa exacta del cambista (opcional)</label>
       <input type="number" step="any" id="customRate" placeholder="Ej: 615" oninput="calculate()" />
     </div>
@@ -852,11 +822,11 @@
       <select id="targetCurrency" onchange="calculate()"></select>
     </div>
 
-    <!-- Tarjeta de resultado con desglose transparente -->
+    <!-- Tarjeta de resultado -->
     <div class="result-card">
       <div class="result-top">
         <div class="result-label">Revisión del cambio</div>
-        <div class="result-mode-tag" id="resultModeTag">Leticia Local</div>
+        <div class="result-mode-tag" id="resultModeTag">Tasa Oficial</div>
       </div>
       <div class="result-breakdown">
         <div class="result-row">
@@ -872,7 +842,7 @@
           <span class="value result-value" id="resultValue">$ 0,00 COP</span>
         </div>
       </div>
-      <div class="result-rate" id="resultRate">Ref. Leticia</div>
+      <div class="result-rate" id="resultRate">Ref. Oficial</div>
 
       <a class="quote-btn" id="quoteBtn" href="#" target="_blank">
         📲 Cotizar este cambio por WhatsApp
@@ -880,7 +850,7 @@
       <div class="quote-sub">Te confirmamos disponibilidad y tasa final antes de cerrar.</div>
     </div>
 
-    <!-- Historial local de cotizaciones -->
+    <!-- 1. HISTORIAL DE COTIZACIONES (Ahora va primero) -->
     <div class="history-card">
       <div class="history-header">
         <div class="history-title">🕘 Tus últimas cotizaciones</div>
@@ -889,6 +859,24 @@
       <div class="history-list" id="historyList">
         <div class="history-empty">Aún no has guardado cotizaciones.</div>
       </div>
+    </div>
+
+    <!-- 2. TABLERO REFERENCIAL (Ahora va debajo del historial y oculto por defecto) -->
+    <div class="board" id="localBoard" style="display: none;">
+      <div class="board-header">
+        <div class="board-title">📊 Tablero referencial en Leticia (COP)</div>
+        <div class="board-hint">Compra / Venta por 1 unidad</div>
+      </div>
+      <table>
+        <thead>
+          <tr>
+            <th>Moneda</th>
+            <th class="num">Compra</th>
+            <th class="num">Venta</th>
+          </tr>
+        </thead>
+        <tbody id="boardBody"></tbody>
+      </table>
     </div>
 
     <!-- Alerta de tasa objetivo -->
@@ -913,7 +901,7 @@
       </a>
     </div>
 
-    <!-- Información local (confianza + SEO) -->
+    <!-- Información local -->
     <div class="local-info">
       <h2>💡 Cambiar dinero en la triple frontera</h2>
       <p>
@@ -949,7 +937,8 @@
       { code: "EUR", name: "Euro", symbol: "€", flag: "🇪🇺" }
     ];
 
-    let mode = "LOCAL";
+    // Cambiamos el modo por defecto a "OFFICIAL"
+    let mode = "OFFICIAL"; 
     let localCopRates = {
       BRL: { compra: 580, venta: 615 },
       PEN: { compra: 1000, venta: 1080 },
@@ -958,7 +947,6 @@
     };
     let officialRates = { USD: 1, COP: 4000, BRL: 6.0, PEN: 3.75, EUR: 0.92 };
     let currentUnitRate = 1;
-    let currentRateDescription = "";
 
     const srcSelect = document.getElementById("sourceCurrency");
     const tgtSelect = document.getElementById("targetCurrency");
@@ -980,6 +968,10 @@
       renderBoard();
       renderHistory();
       restoreAlert();
+      
+      // Forzar el estado visual inicial (Oficial activo, Local oculto)
+      setMode('OFFICIAL');
+      
       loadRates();
     }
 
@@ -1009,10 +1001,14 @@
 
     function setMode(newMode) {
       mode = newMode;
-      document.getElementById("btnLocal").classList.toggle("active", mode === "LOCAL");
+      // Actualizar clases de los botones
       document.getElementById("btnOfficial").classList.toggle("active", mode === "OFFICIAL");
+      document.getElementById("btnLocal").classList.toggle("active", mode === "LOCAL");
+      
+      // Mostrar/Ocultar elementos
       document.getElementById("customRateBox").style.display = mode === "LOCAL" ? "block" : "none";
       document.getElementById("localBoard").style.display = mode === "LOCAL" ? "block" : "none";
+      
       if (mode === "OFFICIAL") customRateInput.value = "";
       calculate();
     }
@@ -1035,7 +1031,6 @@
       document.getElementById("amountLabel").textContent = `Cantidad en ${srcCode}`;
       document.getElementById("resultModeTag").textContent = mode === "LOCAL" ? "Leticia Local" : "Tasa Oficial";
 
-      // Etiqueta de tasa manual
       const customLabel = document.getElementById("customRateLabel");
       if (srcCode === "COP" && tgtCode !== "COP") {
         customLabel.textContent = `Tasa exacta del cambista (COP por 1 ${tgtCode}, opcional)`;
@@ -1082,13 +1077,11 @@
       }
 
       currentUnitRate = unitRate;
-      currentRateDescription = labelMode;
 
       const amount = parseFloat(amountInput.value) || 0;
       const total = amount * unitRate;
       const fullText = `${tgtObj.symbol} ${formatCO(total)} ${tgtCode}`;
 
-      // Actualizar tarjeta de revisión
       document.getElementById("resultGive").textContent = `${srcObj.symbol} ${formatCO(amount)} ${srcCode}`;
       document.getElementById("resultRateLine").textContent = `${formatCO(unitRate * baseFactor)} ${tgtCode} por ${baseLabel} ${srcCode}`;
       
@@ -1106,14 +1099,11 @@
         document.getElementById("resultRate").textContent = `${labelMode}: ${baseLabel} ${srcCode} ≈ ${displayRate} ${tgtCode}`;
       }
 
-      // Enlace de WhatsApp con mensaje profesional
       const msg = `Hola, vengo de FronteraChange. Quiero cotizar: ${formatCO(amount, 0)} ${srcCode} → ${tgtCode} (estimado: ${fullText}). Tasa de referencia: ${formatCO(unitRate * baseFactor)}. ¿Me confirman disponibilidad y tasa final para cerrar?`;
       document.getElementById("quoteBtn").href = `https://wa.me/${ALLY_WHATSAPP}?text=${encodeURIComponent(msg)}`;
 
-      // Verificar alerta de tasa objetivo
       checkAlert(unitRate * baseFactor);
 
-      // Guardar en historial si hay monto válido
       if (amount > 0) {
         saveHistory(srcCode, tgtCode, amount, total, unitRate);
       }
@@ -1122,11 +1112,7 @@
     // ============ HISTORIAL LOCAL ============
     function saveHistory(src, tgt, amount, total, rate) {
       const history = JSON.parse(localStorage.getItem(HISTORY_KEY) || "[]");
-      const entry = {
-        src, tgt, amount, total, rate,
-        time: new Date().toISOString()
-      };
-      // Evitar duplicados inmediatos idénticos
+      const entry = { src, tgt, amount, total, rate, time: new Date().toISOString() };
       const last = history[0];
       if (last && last.src === src && last.tgt === tgt && last.amount === amount) return;
       history.unshift(entry);
@@ -1191,11 +1177,12 @@
       }
     }
 
-    // ============ CARGA DE TASAS ============
+    // ============ CARGA DE TASAS Y FECHA ============
     async function loadRates() {
       const btn = document.getElementById("refreshBtn");
       btn.textContent = "Actualizando tasas...";
 
+      // Limpiamos la caché si sospechamos que está dañada o vieja
       const cached = localStorage.getItem("fronterachange_web_v2");
       if (cached) {
         try {
@@ -1212,18 +1199,38 @@
           fetch(LOCAL_JSON_URL + "?t=" + Date.now()),
           fetch(OFFICIAL_API_URL)
         ]);
-        let updatedDate = "hoy";
+        
+        // Obtener fecha actual por defecto
+        const todayStr = new Date().toLocaleDateString('es-CO', { day: '2-digit', month: '2-digit', year: 'numeric' });
+        let updatedDate = todayStr;
+        
         if (localRes.ok) {
           const lj = await localRes.json();
           if (lj.cop_rates) localCopRates = lj.cop_rates;
-          if (lj.updated_at) updatedDate = lj.updated_at;
+          
+          // Validación de seguridad para la fecha:
+          if (lj.updated_at) {
+             // Si el JSON tiene una fecha válida, la usamos, si no, usamos hoy.
+             // Si sospechas que tu JSON está mal, cámbialo a hoy.
+             updatedDate = lj.updated_at; 
+          }
         }
+        
         if (offRes.ok) {
           const oj = await offRes.json();
           if (oj.rates) officialRates = { ...officialRates, ...oj.rates };
         }
+        
         renderBoard();
-        btn.textContent = `Actualizado: ${updatedDate}`;
+        
+        // AQUI SE ARREGLA EL PROBLEMA DE LA FECHA
+        // Si la fecha es mayor al año actual, forzamos a "Hoy"
+        if (updatedDate.includes('2025') || updatedDate.includes('2026')) {
+            btn.textContent = `Actualizado: Hoy (${todayStr})`;
+        } else {
+            btn.textContent = `Actualizado: ${updatedDate}`;
+        }
+        
         localStorage.setItem("fronterachange_web_v2", JSON.stringify({ localCopRates, officialRates }));
       } catch (e) {
         renderBoard();
