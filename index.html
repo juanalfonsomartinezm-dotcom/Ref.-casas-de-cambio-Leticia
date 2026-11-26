@@ -75,6 +75,17 @@
     }
     .result-rate { font-size: 12px; opacity: 0.88; }
 
+    /* BOTÓN INTELIGENTE NEQUI / PIX */
+    .quote-btn {
+      display: block; width: 100%; margin-top: 14px; padding: 12px 14px;
+      background: var(--accent); color: #0B1F12; text-decoration: none;
+      font-weight: 800; font-size: 14px; border-radius: 10px; border: none;
+      cursor: pointer; box-shadow: 0 4px 12px rgba(0,0,0,0.25);
+    }
+    .quote-sub {
+      font-size: 11px; opacity: 0.85; margin-top: 6px;
+    }
+
     /* ESPACIO DE PATROCINIO LOCAL */
     .sponsor-card {
       background: linear-gradient(135deg, #1E2538, #192B24);
@@ -127,8 +138,8 @@
     </div>
 
     <div class="field" id="customRateBox">
-      <label for="customRate">Tasa exacta del cambista (opcional)</label>
-      <input type="number" step="any" id="customRate" placeholder="Ej: 625" oninput="calculate()" />
+      <label for="customRate" id="customRateLabel">Tasa exacta del cambista (opcional)</label>
+      <input type="number" step="any" id="customRate" placeholder="Ej: 615" oninput="calculate()" />
     </div>
 
     <div class="field">
@@ -154,6 +165,11 @@
       <div class="result-label">Equivalente estimado</div>
       <div class="result-value" id="resultValue">$ 0,00 COP</div>
       <div class="result-rate" id="resultRate">Ref. Leticia</div>
+
+      <a class="quote-btn" id="quoteBtn" href="#" target="_blank">
+        📲 Cotizar cambio (Nequi / Pix / Efectivo)
+      </a>
+      <div class="quote-sub">Atención directa con casa de cambio aliada en Leticia</div>
     </div>
 
     <!-- TARJETA DE PATROCINIO -->
@@ -163,18 +179,21 @@
       <p class="sponsor-desc">
         Turistas y viajeros consultan el precio del Real y el Sol cada día antes de comprar en Leticia y Tabatinga. Destaca tu marca aquí.
       </p>
-      <a class="sponsor-cta" href="https://wa.me/573108175214?text=Hola,%20quiero%20anunciar%20mi%20negocio%20en%20FronteraChange" target="_blank">
+      <a class="sponsor-cta" id="sponsorBtn" href="#" target="_blank">
         📲 Anunciar por WhatsApp
       </a>
     </div>
 
     <div class="legal">
-      ⚠️ <strong>Aviso legal:</strong> Las tasas mostradas son de carácter informativo y referencial para la zona de frontera. Las operaciones físicas están sujetas a la cotización vigente en casas de cambio autorizadas. Tasas oficiales provistas por ExchangeRate-API.
+      ⚠️ <strong>Aviso legal:</strong> FronteraChange es una herramienta informativa y no realiza operaciones cambiarias ni procesa pagos o transferencias por PSE, Nequi o Pix. Las cotizaciones y cambios se acuerdan directamente con establecimientos autorizados en la zona de frontera. Tasas oficiales provistas por ExchangeRate-API.
     </div>
   </div>
 
   <script>
-    // Lee el JSON directamente desde tu mismo sitio en GitHub Pages
+    // === CONFIGURACIÓN DE WHATSAPP ===
+    const ALLY_WHATSAPP = "573108175214";    // Cambia este por el WhatsApp de la casa de cambio aliada cuando inicien la prueba
+    const SPONSOR_WHATSAPP = "573108175214"; // Tu WhatsApp para vender publicidad
+
     const LOCAL_JSON_URL = "./tasas_leticia.json";
     const OFFICIAL_API_URL = "https://open.er-api.com/v6/latest/USD";
 
@@ -188,7 +207,7 @@
 
     let mode = "LOCAL";
     let localCopRates = {
-      BRL: { compra: 610, venta: 640 },
+      BRL: { compra: 580, venta: 615 },
       PEN: { compra: 1000, venta: 1080 },
       USD: { compra: 3900, venta: 4100 },
       EUR: { compra: 4200, venta: 4450 }
@@ -205,6 +224,9 @@
       });
       srcSelect.value = "BRL";
       tgtSelect.value = "COP";
+
+      document.getElementById("sponsorBtn").href =
+        `https://wa.me/${SPONSOR_WHATSAPP}?text=${encodeURIComponent("Hola, quiero anunciar mi negocio en FronteraChange")}`;
     }
 
     function formatCO(num, decimals = 2) {
@@ -254,21 +276,40 @@
       const tgtObj = CURRENCIES.find(c => c.code === tgtCode);
 
       document.getElementById("amountLabel").textContent = `Cantidad en ${srcCode}`;
+
+      // Etiqueta clara para saber qué valor escribir en tasa manual
+      const customLabel = document.getElementById("customRateLabel");
+      if (srcCode === "COP" && tgtCode !== "COP") {
+        customLabel.textContent = `Tasa exacta del cambista (COP por 1 ${tgtCode}, opcional)`;
+      } else if (tgtCode === "COP" && srcCode !== "COP") {
+        customLabel.textContent = `Tasa exacta del cambista (COP por 1 ${srcCode}, opcional)`;
+      } else {
+        customLabel.textContent = `Tasa exacta del cambista (opcional)`;
+      }
+
       const baseFactor = srcCode === "COP" ? 1000 : 1;
       const baseLabel = srcCode === "COP" ? "1.000" : "1";
 
       const customVal = parseFloat(document.getElementById("customRate").value);
       let unitRate = 1;
       let labelMode = "";
+      let customRateDisplay = "";
 
       if (srcCode === tgtCode) {
         unitRate = 1;
         labelMode = "Misma moneda";
       } else if (mode === "LOCAL" && !isNaN(customVal) && customVal > 0) {
-        unitRate = customVal / baseFactor;
         labelMode = "Tasa manual";
+        if (srcCode === "COP") {
+          // De COP a moneda extranjera: se divide por el valor en pesos
+          unitRate = 1 / customVal;
+          customRateDisplay = `Tasa manual: 1 ${tgtCode} ≈ $ ${formatCO(customVal)} COP`;
+        } else {
+          // De moneda extranjera a COP (o entre extranjeras): se multiplica directo
+          unitRate = customVal;
+          customRateDisplay = `Tasa manual: 1 ${srcCode} ≈ ${formatCO(customVal)} ${tgtCode}`;
+        }
       } else if (mode === "LOCAL") {
-        // Lógica real de casa de cambio: Compra y Venta
         if (tgtCode === "COP") {
           unitRate = localCopRates[srcCode].compra;
           labelMode = "Compra en Leticia";
@@ -276,7 +317,6 @@
           unitRate = 1 / localCopRates[tgtCode].venta;
           labelMode = "Venta en Leticia";
         } else {
-          // Extranjera -> COP (compra) -> Extranjera (venta)
           unitRate = localCopRates[srcCode].compra / localCopRates[tgtCode].venta;
           labelMode = "Cruce Compra/Venta Leticia";
         }
@@ -293,8 +333,16 @@
       resultEl.textContent = fullText;
       resultEl.style.fontSize = fullText.length > 18 ? "20px" : fullText.length > 14 ? "24px" : "28px";
 
-      const displayRate = formatCO(unitRate * baseFactor);
-      document.getElementById("resultRate").textContent = `${labelMode}: ${baseLabel} ${srcCode} ≈ ${displayRate} ${tgtCode}`;
+      if (customRateDisplay) {
+        document.getElementById("resultRate").textContent = customRateDisplay;
+      } else {
+        const displayRate = formatCO(unitRate * baseFactor);
+        document.getElementById("resultRate").textContent = `${labelMode}: ${baseLabel} ${srcCode} ≈ ${displayRate} ${tgtCode}`;
+      }
+
+      // Actualizar enlace inteligente de WhatsApp
+      const msg = `Hola, vengo de FronteraChange. Quiero cotizar el cambio de ${formatCO(amount, 0)} ${srcCode} a ${tgtCode} (estimado: ${fullText}). ¿Tienen disponibilidad por Nequi, Pix o efectivo?`;
+      document.getElementById("quoteBtn").href = `https://wa.me/${ALLY_WHATSAPP}?text=${encodeURIComponent(msg)}`;
     }
 
     async function loadRates() {
