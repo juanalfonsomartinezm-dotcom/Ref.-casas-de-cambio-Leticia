@@ -2,7 +2,7 @@
   "updated_at": "25/11/2026",
   "note": "Ref. casas de cambio en Leticia (Compra / Venta)",
   "cop_rates": {
-    "BRL": { "compra": 610, "venta": 640 },
+    "BRL": { "compra": 615, "venta": 580 },
     "PEN": { "compra": 1000, "venta": 1080 },
     "USD": { "compra": 3900, "venta": 4100 },
     "EUR": { "compra": 4200, "venta": 4450 }
