@@ -1,11 +1,10 @@
 {
-  "updated_at": "21/11/2026",
-  "note": "Ref. casas de cambio Leticia: 1 BRL ≈ 580 - 680 COP",
-  "rates": {
-    "USD": 1.0,
-    "COP": 4000.0,
-    "BRL": 6.80,
-    "PEN": 3.85,
-    "EUR": 0.94
+  "updated_at": "25/11/2026",
+  "note": "Ref. casas de cambio en Leticia (Compra / Venta)",
+  "cop_rates": {
+    "BRL": { "compra": 610, "venta": 640 },
+    "PEN": { "compra": 1000, "venta": 1080 },
+    "USD": { "compra": 3900, "venta": 4100 },
+    "EUR": { "compra": 4200, "venta": 4450 }
   }
 }
