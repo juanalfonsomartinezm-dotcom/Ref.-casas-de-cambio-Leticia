@@ -3,29 +3,33 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>FronteraChange | Leticia • Tabatinga • Perú</title>
+  <title>FronteraChange | Leticia · Tabatinga · Perú</title>
   <meta name="theme-color" content="#0A0C12" />
-  <meta name="description" content="Cotiza el tipo de cambio del Real, Sol, Dólar y Euro en la triple frontera: Leticia (CO), Tabatinga (BR) y Perú. Compara tasas locales vs oficiales." />
+  <meta name="description" content="Cotiza el tipo de cambio del Real, Sol, Dólar y Euro en la triple frontera. Compara tasas locales vs oficiales, revisa el monto final sin sorpresas y contacta directamente con casas de cambio aliadas." />
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <style>
     :root {
       --bg: #0A0C12;
-      --surface: rgba(24, 27, 38, 0.72);
+      --surface: rgba(24, 27, 38, 0.78);
       --surface-solid: #161A24;
+      --surface-elevated: #1E222F;
       --border: rgba(255, 255, 255, 0.08);
-      --border-strong: rgba(255, 255, 255, 0.16);
+      --border-strong: rgba(255, 255, 255, 0.18);
       --brand-1: #6366F1;
       --brand-2: #8B5CF6;
       --brand-3: #A855F7;
       --primary-light: #C7CCFF;
       --text: #F4F5FA;
       --muted: #9AA0B8;
+      --muted-2: #6B728A;
       --accent: #22C55E;
       --accent-strong: #16A34A;
       --gold: #FBBF24;
+      --danger: #F87171;
       --radius: 16px;
+      --radius-sm: 12px;
     }
 
     * {
@@ -41,16 +45,16 @@
       color: var(--text);
       min-height: 100vh;
       background:
-        radial-gradient(900px 520px at 50% -12%, rgba(99, 102, 241, 0.25), transparent 60%),
-        radial-gradient(700px 420px at 110% 100%, rgba(139, 92, 246, 0.14), transparent 60%),
+        radial-gradient(900px 520px at 50% -12%, rgba(99, 102, 241, 0.22), transparent 60%),
+        radial-gradient(700px 420px at 110% 100%, rgba(139, 92, 246, 0.12), transparent 60%),
         var(--bg);
       display: flex;
       justify-content: center;
-      padding: 22px 14px 44px;
+      padding: 22px 14px 48px;
       font-feature-settings: "cv11", "ss01";
     }
 
-    .app { width: 100%; max-width: 440px; }
+    .app { width: 100%; max-width: 460px; }
 
     /* ============ HEADER ============ */
     header {
@@ -61,15 +65,11 @@
       margin-bottom: 20px;
     }
 
-    .brand {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-    }
+    .brand { display: flex; align-items: center; gap: 12px; }
 
     .brand-mark {
-      width: 44px; height: 44px;
-      border-radius: 13px;
+      width: 46px; height: 46px;
+      border-radius: 14px;
       background: linear-gradient(135deg, var(--brand-1), var(--brand-2));
       display: grid; place-items: center;
       font-weight: 800;
@@ -96,6 +96,33 @@
       color: var(--muted);
       margin-top: 3px;
       letter-spacing: 0.1px;
+    }
+
+    .trust-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-top: 4px;
+    }
+
+    .trust-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      font-size: 10.5px;
+      font-weight: 600;
+      color: var(--muted);
+      background: var(--surface-solid);
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      padding: 4px 10px;
+    }
+
+    .trust-pill .dot {
+      width: 6px; height: 6px;
+      border-radius: 50%;
+      background: var(--accent);
+      box-shadow: 0 0 0 2px rgba(34, 197, 94, 0.18);
     }
 
     .refresh-btn {
@@ -183,13 +210,26 @@
       box-shadow: 0 8px 24px rgba(0, 0, 0, 0.25);
     }
 
+    .board-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      gap: 8px;
+      margin-bottom: 10px;
+    }
+
     .board-title {
       font-size: 12px;
       color: var(--primary-light);
       font-weight: 700;
       letter-spacing: 0.3px;
-      margin-bottom: 10px;
       text-transform: uppercase;
+    }
+
+    .board-hint {
+      font-size: 10px;
+      color: var(--muted-2);
+      font-weight: 500;
     }
 
     table {
@@ -216,11 +256,6 @@
     }
 
     tbody tr:last-child td { border-bottom: none; }
-
-    tbody tr {
-      transition: background 0.15s ease;
-    }
-
     tbody tr:hover { background: rgba(255, 255, 255, 0.025); }
 
     .num {
@@ -229,6 +264,49 @@
       font-weight: 600;
       letter-spacing: -0.2px;
     }
+
+    .rate-badge {
+      display: inline-block;
+      font-size: 10px;
+      font-weight: 700;
+      padding: 2px 6px;
+      border-radius: 5px;
+      margin-left: 6px;
+      vertical-align: middle;
+    }
+
+    .rate-badge.buy { background: rgba(34, 197, 94, 0.15); color: #86EFAC; }
+    .rate-badge.sell { background: rgba(248, 113, 113, 0.15); color: #FCA5A5; }
+
+    /* ============ STEP FLOW ============ */
+    .step-indicator {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      margin-bottom: 14px;
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--muted-2);
+    }
+
+    .step-num {
+      width: 20px; height: 20px;
+      border-radius: 50%;
+      display: grid; place-items: center;
+      font-size: 10px;
+      font-weight: 700;
+      background: var(--surface-solid);
+      border: 1px solid var(--border);
+      color: var(--muted);
+    }
+
+    .step-num.active {
+      background: linear-gradient(135deg, var(--brand-1), var(--brand-2));
+      color: #fff;
+      border-color: transparent;
+    }
+
+    .step-line { flex: 1; height: 1px; background: var(--border); }
 
     /* ============ FORM FIELDS ============ */
     .field { margin-bottom: 13px; }
@@ -242,10 +320,19 @@
       letter-spacing: 0.15px;
     }
 
+    .field-row {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 8px;
+      align-items: end;
+    }
+
+    .field-col { flex: 1; }
+
     select, input {
       width: 100%;
       padding: 14px 14px;
-      border-radius: 12px;
+      border-radius: var(--radius-sm);
       border: 1px solid var(--border);
       background: var(--surface-solid);
       color: var(--text);
@@ -272,44 +359,33 @@
       padding-right: 36px;
     }
 
-    .swap-wrap {
-      display: flex;
-      justify-content: center;
-      margin: 4px 0 14px;
-    }
-
-    .swap-btn {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
+    .swap-btn-mini {
+      width: 48px; height: 48px;
+      border-radius: 50%;
+      border: 1px solid var(--border);
       background: var(--surface-solid);
       color: var(--text);
-      border: 1px solid var(--border);
-      padding: 9px 18px;
-      border-radius: 999px;
-      font-weight: 600;
-      font-size: 13px;
+      font-size: 18px;
       cursor: pointer;
+      display: grid; place-items: center;
       transition: all 0.22s ease;
+      flex-shrink: 0;
     }
 
-    .swap-btn:hover {
+    .swap-btn-mini:hover {
       border-color: var(--brand-1);
       color: var(--primary-light);
-      transform: translateY(-1px);
+      transform: rotate(180deg) scale(1.05);
       box-shadow: 0 6px 16px rgba(99, 102, 241, 0.2);
     }
 
-    .swap-btn:active { transform: translateY(0) scale(0.98); }
-
-    /* ============ RESULT CARD ============ */
+    /* ============ RESULT CARD (Revisión transparente) ============ */
     .result-card {
       position: relative;
       background: linear-gradient(135deg, #4F46E5 0%, #7C3AED 55%, #A855F7 100%);
       border-radius: 20px;
-      padding: 24px 18px 20px;
-      margin: 20px 0;
-      text-align: center;
+      padding: 22px 18px 18px;
+      margin: 18px 0;
       overflow: hidden;
       box-shadow:
         0 18px 44px -8px rgba(99, 102, 241, 0.5),
@@ -338,23 +414,64 @@
 
     .result-card > * { position: relative; z-index: 1; }
 
+    .result-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 14px;
+    }
+
     .result-label {
-      font-size: 12px;
-      font-weight: 500;
-      opacity: 0.88;
-      letter-spacing: 0.4px;
+      font-size: 11px;
+      font-weight: 600;
+      opacity: 0.9;
+      letter-spacing: 0.5px;
       text-transform: uppercase;
     }
 
-    .result-value {
-      font-size: 30px;
+    .result-mode-tag {
+      font-size: 10px;
+      font-weight: 700;
+      background: rgba(255, 255, 255, 0.18);
+      padding: 3px 8px;
+      border-radius: 6px;
+      letter-spacing: 0.3px;
+    }
+
+    .result-breakdown {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      margin-bottom: 14px;
+    }
+
+    .result-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      font-size: 12.5px;
+    }
+
+    .result-row .label {
+      opacity: 0.82;
+      font-weight: 500;
+    }
+
+    .result-row .value {
+      font-weight: 600;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .result-row.total {
+      padding-top: 10px;
+      border-top: 1px solid rgba(255, 255, 255, 0.22);
+      margin-top: 2px;
+    }
+
+    .result-row.total .value {
+      font-size: 22px;
       font-weight: 800;
-      margin: 10px 0 8px;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
       letter-spacing: -0.03em;
-      line-height: 1.1;
     }
 
     .result-value.pulse { animation: popIn 0.3s cubic-bezier(0.34, 1.56, 0.64, 1); }
@@ -365,17 +482,19 @@
     }
 
     .result-rate {
-      font-size: 11.5px;
-      opacity: 0.9;
+      font-size: 11px;
+      opacity: 0.88;
       font-weight: 500;
-      letter-spacing: 0.15px;
+      letter-spacing: 0.1px;
+      text-align: center;
+      padding-top: 4px;
     }
 
     /* ============ QUOTE BUTTON ============ */
     .quote-btn {
       display: block;
       width: 100%;
-      margin-top: 18px;
+      margin-top: 16px;
       padding: 14px 16px;
       background: linear-gradient(135deg, #22C55E, #16A34A);
       color: #04210F;
@@ -407,13 +526,127 @@
       opacity: 0.85;
       margin-top: 8px;
       font-weight: 500;
+      text-align: center;
     }
+
+    /* ============ SAVED QUOTES (Historial local) ============ */
+    .history-card {
+      background: var(--surface);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 14px 16px;
+      margin: 14px 0;
+    }
+
+    .history-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 10px;
+    }
+
+    .history-title {
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--primary-light);
+      text-transform: uppercase;
+      letter-spacing: 0.3px;
+    }
+
+    .history-clear {
+      font-size: 10.5px;
+      color: var(--muted-2);
+      background: none;
+      border: none;
+      cursor: pointer;
+      font-weight: 600;
+      padding: 2px 6px;
+      border-radius: 6px;
+      transition: all 0.15s ease;
+    }
+
+    .history-clear:hover { color: var(--danger); background: rgba(248,113,113,0.1); }
+
+    .history-list { display: flex; flex-direction: column; gap: 6px; }
+
+    .history-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 12px;
+      padding: 8px 10px;
+      background: var(--surface-solid);
+      border-radius: 9px;
+      border: 1px solid transparent;
+      transition: border-color 0.15s ease;
+    }
+
+    .history-item:hover { border-color: var(--border-strong); }
+
+    .history-pair { font-weight: 600; }
+    .history-pair small { color: var(--muted-2); font-weight: 500; margin-left: 4px; }
+    .history-result { font-weight: 700; color: var(--primary-light); font-variant-numeric: tabular-nums; }
+    .history-time { font-size: 10px; color: var(--muted-2); font-weight: 500; }
+
+    .history-empty {
+      font-size: 11.5px;
+      color: var(--muted-2);
+      text-align: center;
+      padding: 8px 0;
+      font-style: italic;
+    }
+
+    /* ============ RATE ALERT ============ */
+    .alert-box {
+      background: var(--surface-solid);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      padding: 12px 14px;
+      margin: 12px 0;
+    }
+
+    .alert-box .alert-label {
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--muted);
+      margin-bottom: 6px;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    .alert-input-row {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 8px;
+    }
+
+    .alert-input-row input {
+      padding: 10px 12px;
+      font-size: 14px;
+    }
+
+    .alert-btn {
+      padding: 10px 14px;
+      border-radius: 9px;
+      border: none;
+      background: rgba(99, 102, 241, 0.18);
+      color: var(--primary-light);
+      font-weight: 700;
+      font-size: 12px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      white-space: nowrap;
+    }
+
+    .alert-btn:hover { background: rgba(99, 102, 241, 0.3); }
 
     /* ============ SPONSOR CARD ============ */
     .sponsor-card {
       position: relative;
-      background:
-        linear-gradient(135deg, #1E2538 0%, #192B24 100%);
+      background: linear-gradient(135deg, #1E2538 0%, #192B24 100%);
       border: 1px solid rgba(46, 94, 78, 0.9);
       border-radius: 16px;
       padding: 16px;
@@ -478,6 +711,43 @@
       box-shadow: 0 10px 20px rgba(34, 197, 94, 0.4);
     }
 
+    /* ============ LOCAL INFO (SEO / Confianza) ============ */
+    .local-info {
+      background: var(--surface);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 16px;
+      margin: 16px 0;
+    }
+
+    .local-info h2 {
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--primary-light);
+      margin: 0 0 10px;
+      letter-spacing: -0.01em;
+    }
+
+    .local-info p {
+      font-size: 12px;
+      color: var(--muted);
+      line-height: 1.6;
+      margin: 0 0 10px;
+    }
+
+    .local-info ul {
+      margin: 0;
+      padding-left: 18px;
+      font-size: 12px;
+      color: var(--muted);
+      line-height: 1.7;
+    }
+
+    .local-info li { margin-bottom: 4px; }
+    .local-info strong { color: var(--text); }
+
     /* ============ LEGAL ============ */
     .legal {
       background: var(--surface);
@@ -520,6 +790,11 @@
           <div class="subtitle">Leticia 🇨🇴 · Tabatinga 🇧🇷 · Perú 🇵🇪</div>
         </div>
       </div>
+      <div class="trust-row">
+        <span class="trust-pill"><span class="dot"></span> Sin comisiones ocultas</span>
+        <span class="trust-pill"><span class="dot"></span> Tasas verificadas</span>
+        <span class="trust-pill"><span class="dot"></span> Aliados locales</span>
+      </div>
       <button class="refresh-btn" id="refreshBtn" onclick="loadRates()">Cargando tasas...</button>
     </header>
 
@@ -528,9 +803,12 @@
       <button class="mode-btn" id="btnOfficial" onclick="setMode('OFFICIAL')">🏛️ Tasa Oficial</button>
     </div>
 
-    <!-- Tablero de Compra / Venta en Leticia -->
+    <!-- Tablero de Compra / Venta -->
     <div class="board" id="localBoard">
-      <div class="board-title" id="boardTitle">📊 Tablero referencial en Leticia (COP)</div>
+      <div class="board-header">
+        <div class="board-title">📊 Tablero referencial en Leticia (COP)</div>
+        <div class="board-hint">Compra / Venta por 1 unidad</div>
+      </div>
       <table>
         <thead>
           <tr>
@@ -543,6 +821,13 @@
       </table>
     </div>
 
+    <!-- Flujo: Origen → Destino -->
+    <div class="step-indicator">
+      <span class="step-num active">1</span> Origen
+      <span class="step-line"></span>
+      <span class="step-num active">2</span> Destino
+    </div>
+
     <div class="field" id="customRateBox">
       <label for="customRate" id="customRateLabel">Tasa exacta del cambista (opcional)</label>
       <input type="number" step="any" id="customRate" placeholder="Ej: 615" oninput="calculate()" />
@@ -550,16 +835,16 @@
 
     <div class="field">
       <label for="sourceCurrency">Tengo (Moneda origen)</label>
-      <select id="sourceCurrency" onchange="calculate()"></select>
-    </div>
-
-    <div class="field">
-      <label for="amount" id="amountLabel">Cantidad en BRL</label>
-      <input type="number" step="any" id="amount" placeholder="0" value="100" oninput="calculate()" />
-    </div>
-
-    <div class="swap-wrap">
-      <button class="swap-btn" onclick="swapCurrencies()">⇅ Intercambiar monedas</button>
+      <div class="field-row">
+        <div class="field-col">
+          <select id="sourceCurrency" onchange="calculate()"></select>
+        </div>
+        <div class="field-col">
+          <label for="amount" id="amountLabel" style="margin-bottom:5px;">Cantidad en BRL</label>
+          <input type="number" step="any" id="amount" placeholder="0" value="100" oninput="calculate()" />
+        </div>
+        <button class="swap-btn-mini" onclick="swapCurrencies()" title="Intercambiar monedas" aria-label="Intercambiar monedas">⇅</button>
+      </div>
     </div>
 
     <div class="field">
@@ -567,41 +852,94 @@
       <select id="targetCurrency" onchange="calculate()"></select>
     </div>
 
+    <!-- Tarjeta de resultado con desglose transparente -->
     <div class="result-card">
-      <div class="result-label">Equivalente estimado</div>
-      <div class="result-value" id="resultValue">$ 0,00 COP</div>
+      <div class="result-top">
+        <div class="result-label">Revisión del cambio</div>
+        <div class="result-mode-tag" id="resultModeTag">Leticia Local</div>
+      </div>
+      <div class="result-breakdown">
+        <div class="result-row">
+          <span class="label">Entregas</span>
+          <span class="value" id="resultGive">R$ 100,00 BRL</span>
+        </div>
+        <div class="result-row">
+          <span class="label">Tasa aplicada</span>
+          <span class="value" id="resultRateLine">—</span>
+        </div>
+        <div class="result-row total">
+          <span class="label">Recibes (estimado)</span>
+          <span class="value result-value" id="resultValue">$ 0,00 COP</span>
+        </div>
+      </div>
       <div class="result-rate" id="resultRate">Ref. Leticia</div>
 
       <a class="quote-btn" id="quoteBtn" href="#" target="_blank">
-        📲 Cotizar cambio (Nequi / Pix / Efectivo)
+        📲 Cotizar este cambio por WhatsApp
       </a>
-      <div class="quote-sub">Atención directa con casa de cambio aliada en Leticia</div>
+      <div class="quote-sub">Te confirmamos disponibilidad y tasa final antes de cerrar.</div>
+    </div>
+
+    <!-- Historial local de cotizaciones -->
+    <div class="history-card">
+      <div class="history-header">
+        <div class="history-title">🕘 Tus últimas cotizaciones</div>
+        <button class="history-clear" onclick="clearHistory()">Limpiar</button>
+      </div>
+      <div class="history-list" id="historyList">
+        <div class="history-empty">Aún no has guardado cotizaciones.</div>
+      </div>
+    </div>
+
+    <!-- Alerta de tasa objetivo -->
+    <div class="alert-box">
+      <div class="alert-label">🔔 Alerta de tasa objetivo (opcional)</div>
+      <div class="alert-input-row">
+        <input type="number" step="any" id="alertRate" placeholder="Ej: 620" />
+        <button class="alert-btn" onclick="saveAlert()">Guardar</button>
+      </div>
+      <div style="font-size:10px;color:var(--muted-2);margin-top:6px;" id="alertStatus">Te avisaremos visualmente si la tasa cruza tu objetivo.</div>
     </div>
 
     <!-- TARJETA DE PATROCINIO -->
     <div class="sponsor-card">
       <div class="sponsor-badge">⭐ Recomendado en Leticia</div>
-      <div class="sponsor-title">Tu negocio turístico o casa de cambio aquí</div>
+      <div class="sponsor-title">Tu casa de cambio o negocio turístico aquí</div>
       <p class="sponsor-desc">
-        Turistas y viajeros consultan el precio del Real y el Sol cada día antes de comprar en Leticia y Tabatinga. Destaca tu marca aquí.
+        Miles de viajeros consultan el precio del Real, el Sol y el Dólar antes de cruzar la frontera. Muestra tu tasa y tu marca en este espacio.
       </p>
       <a class="sponsor-cta" id="sponsorBtn" href="#" target="_blank">
         📲 Anunciar por WhatsApp
       </a>
     </div>
 
+    <!-- Información local (confianza + SEO) -->
+    <div class="local-info">
+      <h2>💡 Cambiar dinero en la triple frontera</h2>
+      <p>
+        En <strong>Leticia (Colombia)</strong>, <strong>Tabatinga (Brasil)</strong> y la zona de <strong>Santa Rosa (Perú)</strong> las tres monedas circulan libremente. Las tasas varían entre casas de cambio, y pagar con la moneda local suele ser más conveniente que usar tarjeta.
+      </p>
+      <ul>
+        <li><strong>Compara siempre compra y venta</strong>: la diferencia (spread) es tu costo real.</li>
+        <li><strong>Lleva efectivo</strong>: los cajeros en Tabatinga pueden fallar; el efectivo es más seguro para cambiar.</li>
+        <li><strong>Confirma la tasa final</strong> antes de entregar tu dinero; usa nuestra revisión para tener claridad.</li>
+        <li><strong>Evita cambiar en la calle sin referencias</strong>; prioriza casas de cambio establecidas.</li>
+      </ul>
+    </div>
+
     <div class="legal">
-      ⚠️ <strong>Aviso legal:</strong> FronteraChange es una herramienta informativa y no realiza operaciones cambiarias ni procesa pagos o transferencias por PSE, Nequi o Pix. Las cotizaciones y cambios se acuerdan directamente con establecimientos autorizados en la zona de frontera. Tasas oficiales provistas por ExchangeRate-API.
+      ⚠️ <strong>Aviso legal:</strong> FronteraChange es una herramienta informativa y no realiza operaciones cambiarias ni procesa pagos por PSE, Nequi o Pix. Las cotizaciones y cambios se acuerdan directamente con establecimientos autorizados. Las tasas mostradas son referenciales y pueden variar; confirma siempre con tu casa de cambio antes de operar.
     </div>
   </div>
 
   <script>
-    // === CONFIGURACIÓN DE WHATSAPP ===
+    // === CONFIGURACIÓN ===
     const ALLY_WHATSAPP = "573108175214";
     const SPONSOR_WHATSAPP = "573108175214";
-
     const LOCAL_JSON_URL = "./tasas_leticia.json";
     const OFFICIAL_API_URL = "https://open.er-api.com/v6/latest/USD";
+    const HISTORY_KEY = "fronterachange_history_v1";
+    const ALERT_KEY = "fronterachange_alert_v1";
 
     const CURRENCIES = [
       { code: "BRL", name: "Real Brasileño", symbol: "R$", flag: "🇧🇷" },
@@ -619,10 +957,15 @@
       EUR: { compra: 4200, venta: 4450 }
     };
     let officialRates = { USD: 1, COP: 4000, BRL: 6.0, PEN: 3.75, EUR: 0.92 };
+    let currentUnitRate = 1;
+    let currentRateDescription = "";
 
     const srcSelect = document.getElementById("sourceCurrency");
     const tgtSelect = document.getElementById("targetCurrency");
+    const amountInput = document.getElementById("amount");
+    const customRateInput = document.getElementById("customRate");
 
+    // ============ INICIALIZACIÓN ============
     function initSelectors() {
       CURRENCIES.forEach(c => {
         srcSelect.add(new Option(`${c.flag} ${c.code} - ${c.name}`, c.code));
@@ -633,6 +976,11 @@
 
       document.getElementById("sponsorBtn").href =
         `https://wa.me/${SPONSOR_WHATSAPP}?text=${encodeURIComponent("Hola, quiero anunciar mi negocio en FronteraChange")}`;
+
+      renderBoard();
+      renderHistory();
+      restoreAlert();
+      loadRates();
     }
 
     function formatCO(num, decimals = 2) {
@@ -642,6 +990,7 @@
       }).format(num);
     }
 
+    // ============ TABLERO ============
     function renderBoard() {
       const tbody = document.getElementById("boardBody");
       tbody.innerHTML = "";
@@ -664,7 +1013,7 @@
       document.getElementById("btnOfficial").classList.toggle("active", mode === "OFFICIAL");
       document.getElementById("customRateBox").style.display = mode === "LOCAL" ? "block" : "none";
       document.getElementById("localBoard").style.display = mode === "LOCAL" ? "block" : "none";
-      if (mode === "OFFICIAL") document.getElementById("customRate").value = "";
+      if (mode === "OFFICIAL") customRateInput.value = "";
       calculate();
     }
 
@@ -672,17 +1021,21 @@
       const temp = srcSelect.value;
       srcSelect.value = tgtSelect.value;
       tgtSelect.value = temp;
-      document.getElementById("customRate").value = "";
+      customRateInput.value = "";
       calculate();
     }
 
+    // ============ CÁLCULO Y REVISIÓN ============
     function calculate() {
       const srcCode = srcSelect.value;
       const tgtCode = tgtSelect.value;
       const tgtObj = CURRENCIES.find(c => c.code === tgtCode);
+      const srcObj = CURRENCIES.find(c => c.code === srcCode);
 
       document.getElementById("amountLabel").textContent = `Cantidad en ${srcCode}`;
+      document.getElementById("resultModeTag").textContent = mode === "LOCAL" ? "Leticia Local" : "Tasa Oficial";
 
+      // Etiqueta de tasa manual
       const customLabel = document.getElementById("customRateLabel");
       if (srcCode === "COP" && tgtCode !== "COP") {
         customLabel.textContent = `Tasa exacta del cambista (COP por 1 ${tgtCode}, opcional)`;
@@ -695,7 +1048,7 @@
       const baseFactor = srcCode === "COP" ? 1000 : 1;
       const baseLabel = srcCode === "COP" ? "1.000" : "1";
 
-      const customVal = parseFloat(document.getElementById("customRate").value);
+      const customVal = parseFloat(customRateInput.value);
       let unitRate = 1;
       let labelMode = "";
       let customRateDisplay = "";
@@ -728,15 +1081,20 @@
         labelMode = "Tasa oficial";
       }
 
-      const amount = parseFloat(document.getElementById("amount").value) || 0;
+      currentUnitRate = unitRate;
+      currentRateDescription = labelMode;
+
+      const amount = parseFloat(amountInput.value) || 0;
       const total = amount * unitRate;
       const fullText = `${tgtObj.symbol} ${formatCO(total)} ${tgtCode}`;
 
+      // Actualizar tarjeta de revisión
+      document.getElementById("resultGive").textContent = `${srcObj.symbol} ${formatCO(amount)} ${srcCode}`;
+      document.getElementById("resultRateLine").textContent = `${formatCO(unitRate * baseFactor)} ${tgtCode} por ${baseLabel} ${srcCode}`;
+      
       const resultEl = document.getElementById("resultValue");
       resultEl.textContent = fullText;
-      resultEl.style.fontSize = fullText.length > 18 ? "20px" : fullText.length > 14 ? "24px" : "30px";
-
-      // Micro-animación al actualizar el resultado
+      resultEl.style.fontSize = fullText.length > 18 ? "20px" : fullText.length > 14 ? "24px" : "26px";
       resultEl.classList.remove("pulse");
       void resultEl.offsetWidth;
       resultEl.classList.add("pulse");
@@ -748,21 +1106,105 @@
         document.getElementById("resultRate").textContent = `${labelMode}: ${baseLabel} ${srcCode} ≈ ${displayRate} ${tgtCode}`;
       }
 
-      const msg = `Hola, vengo de FronteraChange. Quiero cotizar el cambio de ${formatCO(amount, 0)} ${srcCode} a ${tgtCode} (estimado: ${fullText}). ¿Tienen disponibilidad por Nequi, Pix o efectivo?`;
+      // Enlace de WhatsApp con mensaje profesional
+      const msg = `Hola, vengo de FronteraChange. Quiero cotizar: ${formatCO(amount, 0)} ${srcCode} → ${tgtCode} (estimado: ${fullText}). Tasa de referencia: ${formatCO(unitRate * baseFactor)}. ¿Me confirman disponibilidad y tasa final para cerrar?`;
       document.getElementById("quoteBtn").href = `https://wa.me/${ALLY_WHATSAPP}?text=${encodeURIComponent(msg)}`;
+
+      // Verificar alerta de tasa objetivo
+      checkAlert(unitRate * baseFactor);
+
+      // Guardar en historial si hay monto válido
+      if (amount > 0) {
+        saveHistory(srcCode, tgtCode, amount, total, unitRate);
+      }
     }
 
+    // ============ HISTORIAL LOCAL ============
+    function saveHistory(src, tgt, amount, total, rate) {
+      const history = JSON.parse(localStorage.getItem(HISTORY_KEY) || "[]");
+      const entry = {
+        src, tgt, amount, total, rate,
+        time: new Date().toISOString()
+      };
+      // Evitar duplicados inmediatos idénticos
+      const last = history[0];
+      if (last && last.src === src && last.tgt === tgt && last.amount === amount) return;
+      history.unshift(entry);
+      localStorage.setItem(HISTORY_KEY, JSON.stringify(history.slice(0, 5)));
+      renderHistory();
+    }
+
+    function renderHistory() {
+      const list = document.getElementById("historyList");
+      const history = JSON.parse(localStorage.getItem(HISTORY_KEY) || "[]");
+      if (history.length === 0) {
+        list.innerHTML = '<div class="history-empty">Aún no has guardado cotizaciones.</div>';
+        return;
+      }
+      list.innerHTML = history.map(h => {
+        const srcObj = CURRENCIES.find(c => c.code === h.src);
+        const tgtObj = CURRENCIES.find(c => c.code === h.tgt);
+        const time = new Date(h.time);
+        const timeStr = time.toLocaleTimeString("es-CO", { hour: "2-digit", minute: "2-digit" });
+        return `
+          <div class="history-item">
+            <span class="history-pair">${srcObj.flag} ${h.src} → ${tgtObj.flag} ${h.tgt}<small>${formatCO(h.amount, 0)}</small></span>
+            <span class="history-result">${tgtObj.symbol} ${formatCO(h.total, 0)}</span>
+            <span class="history-time">${timeStr}</span>
+          </div>`;
+      }).join("");
+    }
+
+    function clearHistory() {
+      localStorage.removeItem(HISTORY_KEY);
+      renderHistory();
+    }
+
+    // ============ ALERTA DE TASA ============
+    function saveAlert() {
+      const val = parseFloat(document.getElementById("alertRate").value);
+      if (isNaN(val) || val <= 0) {
+        document.getElementById("alertStatus").textContent = "Ingresa un valor válido.";
+        return;
+      }
+      localStorage.setItem(ALERT_KEY, JSON.stringify({ rate: val, pair: srcSelect.value + tgtSelect.value }));
+      document.getElementById("alertStatus").textContent = `Alerta activa: te avisaremos si la tasa cruza ${formatCO(val)}.`;
+      checkAlert(currentUnitRate * (srcSelect.value === "COP" ? 1000 : 1));
+    }
+
+    function restoreAlert() {
+      const saved = JSON.parse(localStorage.getItem(ALERT_KEY) || "null");
+      if (saved) {
+        document.getElementById("alertRate").value = saved.rate;
+        document.getElementById("alertStatus").textContent = `Alerta activa para ${saved.pair}: objetivo ${formatCO(saved.rate)}.`;
+      }
+    }
+
+    function checkAlert(currentRate) {
+      const saved = JSON.parse(localStorage.getItem(ALERT_KEY) || "null");
+      if (!saved) return;
+      const pair = srcSelect.value + tgtSelect.value;
+      if (saved.pair === pair && currentRate >= saved.rate) {
+        document.getElementById("alertStatus").innerHTML = `🎯 <strong style="color:var(--accent)">¡Tasa objetivo alcanzada!</strong> ${formatCO(currentRate)} ≥ ${formatCO(saved.rate)}. Es un buen momento para cambiar.`;
+      } else if (saved.pair === pair) {
+        document.getElementById("alertStatus").textContent = `Alerta activa: objetivo ${formatCO(saved.rate)}. Tasa actual: ${formatCO(currentRate)}.`;
+      }
+    }
+
+    // ============ CARGA DE TASAS ============
     async function loadRates() {
       const btn = document.getElementById("refreshBtn");
       btn.textContent = "Actualizando tasas...";
 
       const cached = localStorage.getItem("fronterachange_web_v2");
       if (cached) {
-        const data = JSON.parse(cached);
-        if (data.localCopRates) localCopRates = data.localCopRates;
-        if (data.officialRates) officialRates = data.officialRates;
-        renderBoard();
-        calculate();
+        try {
+          const data = JSON.parse(cached);
+          if (data.localCopRates) localCopRates = data.localCopRates;
+          if (data.officialRates) officialRates = data.officialRates;
+          renderBoard();
+          calculate();
+        } catch (_) {}
       }
 
       try {
@@ -790,9 +1232,8 @@
       calculate();
     }
 
+    // ============ ARRANQUE ============
     initSelectors();
-    renderBoard();
-    loadRates();
   </script>
 </body>
 </html>
