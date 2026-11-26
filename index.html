@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>FronteraChange | Leticia • Tabatinga • Perú</title>
+  <meta name="theme-color" content="#12131A" />
+  <style>
+    :root {
+      --bg: #12131A;
+      --surface: #1C1E2A;
+      --border: #33374B;
+      --primary: #4C5696;
+      --primary-light: #C6CEFF;
+      --text: #F2F4F8;
+      --muted: #A1A6BC;
+      --accent: #25D366;
+      --gold: #F5C451;
+    }
+    * { box-sizing: border-box; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
+    body {
+      margin: 0; background: var(--bg); color: var(--text);
+      display: flex; justify-content: center; padding: 18px 14px 40px;
+    }
+    .app { width: 100%; max-width: 440px; }
+    header { text-align: center; margin-bottom: 12px; }
+    h1 { margin: 0; font-size: 26px; color: var(--primary-light); }
+    .subtitle { font-size: 13px; color: var(--muted); margin-top: 4px; }
+    .refresh-btn {
+      background: none; border: none; color: var(--primary-light);
+      font-size: 12px; margin-top: 8px; cursor: pointer; padding: 6px 10px;
+    }
+    .modes { display: flex; gap: 8px; margin: 10px 0 14px; }
+    .mode-btn {
+      flex: 1; padding: 10px; border-radius: 10px; border: 1px solid var(--border);
+      background: var(--surface); color: var(--muted); font-weight: 600; cursor: pointer; font-size: 13px;
+    }
+    .mode-btn.active {
+      background: #2C314E; border-color: var(--primary-light); color: #fff;
+    }
+
+    /* TABLERO COMPRA / VENTA */
+    .board {
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: 12px; padding: 10px 12px; margin-bottom: 14px;
+    }
+    .board-title { font-size: 12px; color: var(--primary-light); font-weight: 700; margin-bottom: 8px; }
+    table { width: 100%; border-collapse: collapse; font-size: 13px; }
+    th { text-align: left; color: var(--muted); font-weight: 600; font-size: 11px; padding-bottom: 6px; border-bottom: 1px solid var(--border); }
+    td { padding: 6px 0; border-bottom: 1px solid rgba(255,255,255,0.05); }
+    tr:last-child td { border-bottom: none; }
+    .num { text-align: right; font-variant-numeric: tabular-nums; }
+
+    .field { margin-bottom: 12px; }
+    label { display: block; font-size: 12px; color: var(--muted); margin-bottom: 5px; }
+    select, input {
+      width: 100%; padding: 13px 12px; border-radius: 10px;
+      border: 1px solid var(--border); background: var(--surface);
+      color: var(--text); font-size: 16px; outline: none;
+    }
+    select:focus, input:focus { border-color: var(--primary-light); }
+    .swap-wrap { text-align: center; margin: 6px 0 12px; }
+    .swap-btn {
+      background: #2A2D3E; color: var(--text); border: none;
+      padding: 10px 18px; border-radius: 20px; font-weight: 600; font-size: 14px; cursor: pointer;
+    }
+    .result-card {
+      background: var(--primary); border-radius: 16px; padding: 20px 14px;
+      text-align: center; margin: 18px 0; box-shadow: 0 6px 18px rgba(0,0,0,0.35);
+    }
+    .result-label { font-size: 13px; opacity: 0.9; }
+    .result-value {
+      font-size: 28px; font-weight: 800; margin: 8px 0;
+      white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+    }
+    .result-rate { font-size: 12px; opacity: 0.88; }
+
+    /* ESPACIO DE PATROCINIO LOCAL */
+    .sponsor-card {
+      background: linear-gradient(135deg, #1E2538, #192B24);
+      border: 1px solid #2E5E4E; border-radius: 14px; padding: 14px; margin: 16px 0;
+    }
+    .sponsor-badge {
+      display: inline-block; font-size: 11px; font-weight: 700;
+      color: var(--gold); letter-spacing: 0.4px; margin-bottom: 6px;
+    }
+    .sponsor-title { font-size: 15px; font-weight: 700; margin: 0 0 4px; }
+    .sponsor-desc { font-size: 12px; color: var(--muted); margin: 0 0 10px; line-height: 1.4; }
+    .sponsor-cta {
+      display: inline-block; background: var(--accent); color: #0B1F12;
+      text-decoration: none; font-weight: 700; font-size: 13px;
+      padding: 8px 14px; border-radius: 8px;
+    }
+
+    .legal {
+      background: var(--surface); border-radius: 12px; padding: 12px;
+      font-size: 11px; color: var(--muted); line-height: 1.5; text-align: justify;
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <header>
+      <h1>FronteraChange</h1>
+      <div class="subtitle">Leticia 🇨🇴 • Tabatinga 🇧🇷 • Perú 🇵🇪</div>
+      <button class="refresh-btn" id="refreshBtn" onclick="loadRates()">🔄 Cargando tasas...</button>
+    </header>
+
+    <div class="modes">
+      <button class="mode-btn active" id="btnLocal" onclick="setMode('LOCAL')">🌴 Leticia Local</button>
+      <button class="mode-btn" id="btnOfficial" onclick="setMode('OFFICIAL')">🏛️ Tasa Oficial</button>
+    </div>
+
+    <!-- Tablero de Compra / Venta en Leticia -->
+    <div class="board" id="localBoard">
+      <div class="board-title" id="boardTitle">📊 Tablero referencial en Leticia (COP)</div>
+      <table>
+        <thead>
+          <tr>
+            <th>Moneda</th>
+            <th class="num">Compra</th>
+            <th class="num">Venta</th>
+          </tr>
+        </thead>
+        <tbody id="boardBody"></tbody>
+      </table>
+    </div>
+
+    <div class="field" id="customRateBox">
+      <label for="customRate">Tasa exacta del cambista (opcional)</label>
+      <input type="number" step="any" id="customRate" placeholder="Ej: 625" oninput="calculate()" />
+    </div>
+
+    <div class="field">
+      <label for="sourceCurrency">Tengo (Moneda origen)</label>
+      <select id="sourceCurrency" onchange="calculate()"></select>
+    </div>
+
+    <div class="field">
+      <label for="amount" id="amountLabel">Cantidad en BRL</label>
+      <input type="number" step="any" id="amount" placeholder="0" value="100" oninput="calculate()" />
+    </div>
+
+    <div class="swap-wrap">
+      <button class="swap-btn" onclick="swapCurrencies()">⇅ Intercambiar monedas</button>
+    </div>
+
+    <div class="field">
+      <label for="targetCurrency">Quiero recibir (Moneda destino)</label>
+      <select id="targetCurrency" onchange="calculate()"></select>
+    </div>
+
+    <div class="result-card">
+      <div class="result-label">Equivalente estimado</div>
+      <div class="result-value" id="resultValue">$ 0,00 COP</div>
+      <div class="result-rate" id="resultRate">Ref. Leticia</div>
+    </div>
+
+    <!-- TARJETA DE PATROCINIO -->
+    <div class="sponsor-card">
+      <div class="sponsor-badge">⭐ RECOMENDADO EN LETICIA</div>
+      <div class="sponsor-title">Tu negocio turístico o casa de cambio aquí</div>
+      <p class="sponsor-desc">
+        Turistas y viajeros consultan el precio del Real y el Sol cada día antes de comprar en Leticia y Tabatinga. Destaca tu marca aquí.
+      </p>
+      <a class="sponsor-cta" href="https://wa.me/573000000000?text=Hola,%20quiero%20anunciar%20mi%20negocio%20en%20FronteraChange" target="_blank">
+        📲 Anunciar por WhatsApp
+      </a>
+    </div>
+
+    <div class="legal">
+      ⚠️ <strong>Aviso legal:</strong> Las tasas mostradas son de carácter informativo y referencial para la zona de frontera. Las operaciones físicas están sujetas a la cotización vigente en casas de cambio autorizadas. Tasas oficiales provistas por ExchangeRate-API.
+    </div>
+  </div>
+
+  <script>
+    // Lee el JSON directamente desde tu mismo sitio en GitHub Pages
+    const LOCAL_JSON_URL = "./tasas_leticia.json";
+    const OFFICIAL_API_URL = "https://open.er-api.com/v6/latest/USD";
+
+    const CURRENCIES = [
+      { code: "BRL", name: "Real Brasileño", symbol: "R$", flag: "🇧🇷" },
+      { code: "COP", name: "Peso Colombiano", symbol: "$", flag: "🇨🇴" },
+      { code: "PEN", name: "Sol Peruano", symbol: "S/", flag: "🇵🇪" },
+      { code: "USD", name: "Dólar Estadounidense", symbol: "US$", flag: "🇺🇸" },
+      { code: "EUR", name: "Euro", symbol: "€", flag: "🇪🇺" }
+    ];
+
+    let mode = "LOCAL";
+    let localCopRates = {
+      BRL: { compra: 610, venta: 640 },
+      PEN: { compra: 1000, venta: 1080 },
+      USD: { compra: 3900, venta: 4100 },
+      EUR: { compra: 4200, venta: 4450 }
+    };
+    let officialRates = { USD: 1, COP: 4000, BRL: 6.0, PEN: 3.75, EUR: 0.92 };
+
+    const srcSelect = document.getElementById("sourceCurrency");
+    const tgtSelect = document.getElementById("targetCurrency");
+
+    function initSelectors() {
+      CURRENCIES.forEach(c => {
+        srcSelect.add(new Option(`${c.flag} ${c.code} - ${c.name}`, c.code));
+        tgtSelect.add(new Option(`${c.flag} ${c.code} - ${c.name}`, c.code));
+      });
+      srcSelect.value = "BRL";
+      tgtSelect.value = "COP";
+    }
+
+    function formatCO(num, decimals = 2) {
+      return new Intl.NumberFormat("es-CO", {
+        minimumFractionDigits: decimals,
+        maximumFractionDigits: decimals
+      }).format(num);
+    }
+
+    function renderBoard() {
+      const tbody = document.getElementById("boardBody");
+      tbody.innerHTML = "";
+      ["BRL", "PEN", "USD", "EUR"].forEach(code => {
+        const c = CURRENCIES.find(x => x.code === code);
+        const r = localCopRates[code];
+        if (!r) return;
+        tbody.innerHTML += `
+          <tr>
+            <td>${c.flag} <strong>${code}</strong></td>
+            <td class="num">$ ${formatCO(r.compra, 0)}</td>
+            <td class="num">$ ${formatCO(r.venta, 0)}</td>
+          </tr>`;
+      });
+    }
+
+    function setMode(newMode) {
+      mode = newMode;
+      document.getElementById("btnLocal").classList.toggle("active", mode === "LOCAL");
+      document.getElementById("btnOfficial").classList.toggle("active", mode === "OFFICIAL");
+      document.getElementById("customRateBox").style.display = mode === "LOCAL" ? "block" : "none";
+      document.getElementById("localBoard").style.display = mode === "LOCAL" ? "block" : "none";
+      if (mode === "OFFICIAL") document.getElementById("customRate").value = "";
+      calculate();
+    }
+
+    function swapCurrencies() {
+      const temp = srcSelect.value;
+      srcSelect.value = tgtSelect.value;
+      tgtSelect.value = temp;
+      document.getElementById("customRate").value = "";
+      calculate();
+    }
+
+    function calculate() {
+      const srcCode = srcSelect.value;
+      const tgtCode = tgtSelect.value;
+      const tgtObj = CURRENCIES.find(c => c.code === tgtCode);
+
+      document.getElementById("amountLabel").textContent = `Cantidad en ${srcCode}`;
+      const baseFactor = srcCode === "COP" ? 1000 : 1;
+      const baseLabel = srcCode === "COP" ? "1.000" : "1";
+
+      const customVal = parseFloat(document.getElementById("customRate").value);
+      let unitRate = 1;
+      let labelMode = "";
+
+      if (srcCode === tgtCode) {
+        unitRate = 1;
+        labelMode = "Misma moneda";
+      } else if (mode === "LOCAL" && !isNaN(customVal) && customVal > 0) {
+        unitRate = customVal / baseFactor;
+        labelMode = "Tasa manual";
+      } else if (mode === "LOCAL") {
+        // Lógica real de casa de cambio: Compra y Venta
+        if (tgtCode === "COP") {
+          unitRate = localCopRates[srcCode].compra;
+          labelMode = "Compra en Leticia";
+        } else if (srcCode === "COP") {
+          unitRate = 1 / localCopRates[tgtCode].venta;
+          labelMode = "Venta en Leticia";
+        } else {
+          // Extranjera -> COP (compra) -> Extranjera (venta)
+          unitRate = localCopRates[srcCode].compra / localCopRates[tgtCode].venta;
+          labelMode = "Cruce Compra/Venta Leticia";
+        }
+      } else {
+        unitRate = officialRates[tgtCode] / officialRates[srcCode];
+        labelMode = "Tasa oficial";
+      }
+
+      const amount = parseFloat(document.getElementById("amount").value) || 0;
+      const total = amount * unitRate;
+      const fullText = `${tgtObj.symbol} ${formatCO(total)} ${tgtCode}`;
+
+      const resultEl = document.getElementById("resultValue");
+      resultEl.textContent = fullText;
+      resultEl.style.fontSize = fullText.length > 18 ? "20px" : fullText.length > 14 ? "24px" : "28px";
+
+      const displayRate = formatCO(unitRate * baseFactor);
+      document.getElementById("resultRate").textContent = `${labelMode}: ${baseLabel} ${srcCode} ≈ ${displayRate} ${tgtCode}`;
+    }
+
+    async function loadRates() {
+      const btn = document.getElementById("refreshBtn");
+      btn.textContent = "⏳ Actualizando tasas...";
+
+      const cached = localStorage.getItem("fronterachange_web_v2");
+      if (cached) {
+        const data = JSON.parse(cached);
+        if (data.localCopRates) localCopRates = data.localCopRates;
+        if (data.officialRates) officialRates = data.officialRates;
+        renderBoard();
+        calculate();
+      }
+
+      try {
+        const [localRes, offRes] = await Promise.all([
+          fetch(LOCAL_JSON_URL + "?t=" + Date.now()),
+          fetch(OFFICIAL_API_URL)
+        ]);
+        let updatedDate = "hoy";
+        if (localRes.ok) {
+          const lj = await localRes.json();
+          if (lj.cop_rates) localCopRates = lj.cop_rates;
+          if (lj.updated_at) updatedDate = lj.updated_at;
+        }
+        if (offRes.ok) {
+          const oj = await offRes.json();
+          if (oj.rates) officialRates = { ...officialRates, ...oj.rates };
+        }
+        renderBoard();
+        btn.textContent = `🔄 Actualizado: ${updatedDate}`;
+        localStorage.setItem("fronterachange_web_v2", JSON.stringify({ localCopRates, officialRates }));
+      } catch (e) {
+        renderBoard();
+        btn.textContent = "📴 Modo offline (tasas guardadas)";
+      }
+      calculate();
+    }
+
+    initSelectors();
+    renderBoard();
+    loadRates();
+  </script>
+</body>
+</html>
